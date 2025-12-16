@@ -8,24 +8,8 @@ import { Slider } from "@/components/ui/slider"
 import { MapContainer, TileLayer, Circle, Marker, Popup, useMap } from "react-leaflet"
 import { Zap, Navigation, MapPin, Battery, Clock } from "lucide-react"
 import "leaflet/dist/leaflet.css"
-import L from "leaflet"
 
-// Fix for Leaflet marker icons in Next.js
-const icon = L.icon({
-    iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-    iconRetinaUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
-    shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-})
-
-// Station Icon
-const stationIcon = L.divIcon({
-    className: "custom-div-icon",
-    html: `<div style='background-color: #00E0FF; width: 12px; height: 12px; border-radius: 50%; box-shadow: 0 0 10px #00E0FF; border: 2px solid #fff;'></div>`,
-    iconSize: [12, 12],
-    iconAnchor: [6, 6],
-})
+// Removed top-level L import and icon definitions to prevent SSR crash
 
 const chargingStations = [
     { id: 1, lat: 12.9716, lng: 77.5946, name: "Nexus Supercharge - MG Road", power: "150kW", available: 4 },
@@ -46,6 +30,38 @@ export function TripPlanner() {
     const [range, setRange] = useState(250) // km
     const [center] = useState<[number, number]>([12.9716, 77.5946]) // Bengaluru
     const [selectedStation, setSelectedStation] = useState<number | null>(null)
+    const [Leaflet, setLeaflet] = useState<any>(null); // Store the dynamically imported leaflet module
+
+    useEffect(() => {
+        // Dynamically import Leaflet on the client side
+        import("leaflet").then((L) => {
+            setLeaflet(L.default || L);
+        });
+    }, []);
+
+    if (!Leaflet) {
+        return (
+            <div className="h-full flex items-center justify-center text-muted-foreground">
+                Loading Map...
+            </div>
+        )
+    }
+
+    // Define icons using the imported Leaflet instance
+    const icon = Leaflet.icon({
+        iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+        iconRetinaUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
+        shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+    })
+
+    const stationIcon = Leaflet.divIcon({
+        className: "custom-div-icon",
+        html: `<div style='background-color: #00E0FF; width: 12px; height: 12px; border-radius: 50%; box-shadow: 0 0 10px #00E0FF; border: 2px solid #fff;'></div>`,
+        iconSize: [12, 12],
+        iconAnchor: [6, 6],
+    })
 
     return (
         <div className="h-full flex flex-col gap-6">
@@ -92,8 +108,8 @@ export function TripPlanner() {
                                 key={station.id}
                                 onClick={() => setSelectedStation(station.id)}
                                 className={`p-3 rounded-xl border cursor-pointer transition-all ${selectedStation === station.id
-                                        ? "bg-primary/10 border-primary"
-                                        : "glass-card-static border-transparent hover:border-primary/50"
+                                    ? "bg-primary/10 border-primary"
+                                    : "glass-card-static border-transparent hover:border-primary/50"
                                     }`}
                             >
                                 <div className="flex justify-between items-start mb-1">
