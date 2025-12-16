@@ -94,13 +94,13 @@ export default function Home() {
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background" suppressHydrationWarning>
       <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} isOpen={true} />
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header onToggleSidebar={() => { }} sidebarOpen={true} />
 
-        <main className="flex-1 overflow-auto p-6 pb-8">
+        <main className="flex-1 overflow-auto p-6 pb-8" suppressHydrationWarning>
           <AnimatePresence mode="wait">
             <motion.div
               key={currentPage}
@@ -109,6 +109,7 @@ export default function Home() {
               animate="animate"
               exit="exit"
               className="h-full"
+              suppressHydrationWarning
             >
               {renderPage()}
             </motion.div>
