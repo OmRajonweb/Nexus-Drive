@@ -1,15 +1,18 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
-import { MapContainer, TileLayer, Circle, Marker, Popup, useMap } from "react-leaflet"
-import { Zap, Navigation, MapPin, Battery, Clock } from "lucide-react"
-import "leaflet/dist/leaflet.css"
+import { Zap, Navigation, Battery } from "lucide-react"
+import dynamic from "next/dynamic"
 
-// Removed top-level L import and icon definitions to prevent SSR crash
+// Dynamic import of the map component to disable SSR for it entirely
+const TripMap = dynamic(() => import("@/components/maps/TripMap"), {
+    ssr: false,
+    loading: () => <div className="h-full w-full flex items-center justify-center bg-[#0B0E12] text-muted-foreground">Loading Map...</div>
+})
 
 const chargingStations = [
     { id: 1, lat: 12.9716, lng: 77.5946, name: "Nexus Supercharge - MG Road", power: "150kW", available: 4 },
@@ -18,50 +21,10 @@ const chargingStations = [
     { id: 4, lat: 12.8452, lng: 77.6602, name: "E-City Fast Charge", power: "350kW", available: 1 },
 ]
 
-function MapController({ center }: { center: [number, number] }) {
-    const map = useMap()
-    useEffect(() => {
-        map.flyTo(center, map.getZoom())
-    }, [center, map])
-    return null
-}
-
 export function TripPlanner() {
     const [range, setRange] = useState(250) // km
     const [center] = useState<[number, number]>([12.9716, 77.5946]) // Bengaluru
     const [selectedStation, setSelectedStation] = useState<number | null>(null)
-    const [Leaflet, setLeaflet] = useState<any>(null); // Store the dynamically imported leaflet module
-
-    useEffect(() => {
-        // Dynamically import Leaflet on the client side
-        import("leaflet").then((L) => {
-            setLeaflet(L.default || L);
-        });
-    }, []);
-
-    if (!Leaflet) {
-        return (
-            <div className="h-full flex items-center justify-center text-muted-foreground">
-                Loading Map...
-            </div>
-        )
-    }
-
-    // Define icons using the imported Leaflet instance
-    const icon = Leaflet.icon({
-        iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-        iconRetinaUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
-        shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-    })
-
-    const stationIcon = Leaflet.divIcon({
-        className: "custom-div-icon",
-        html: `<div style='background-color: #00E0FF; width: 12px; height: 12px; border-radius: 50%; box-shadow: 0 0 10px #00E0FF; border: 2px solid #fff;'></div>`,
-        iconSize: [12, 12],
-        iconAnchor: [6, 6],
-    })
 
     return (
         <div className="h-full flex flex-col gap-6">
@@ -108,8 +71,8 @@ export function TripPlanner() {
                                 key={station.id}
                                 onClick={() => setSelectedStation(station.id)}
                                 className={`p-3 rounded-xl border cursor-pointer transition-all ${selectedStation === station.id
-                                    ? "bg-primary/10 border-primary"
-                                    : "glass-card-static border-transparent hover:border-primary/50"
+                                        ? "bg-primary/10 border-primary"
+                                        : "glass-card-static border-transparent hover:border-primary/50"
                                     }`}
                             >
                                 <div className="flex justify-between items-start mb-1">
@@ -133,52 +96,13 @@ export function TripPlanner() {
 
                 {/* Map */}
                 <Card className="lg:col-span-2 rounded-2xl overflow-hidden border border-primary/20 relative">
-                    <MapContainer
+                    <TripMap
                         center={center}
-                        zoom={11}
-                        style={{ height: "100%", width: "100%", background: "#0B0E12" }}
-                        zoomControl={false}
-                    >
-                        {/* Dark Mode Tiles */}
-                        <TileLayer
-                            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                        />
-
-                        <MapController center={center} />
-
-                        {/* Range Circle */}
-                        <Circle
-                            center={center}
-                            radius={range * 1000}
-                            pathOptions={{ color: '#00E0FF', fillColor: '#00E0FF', fillOpacity: 0.1, weight: 1 }}
-                        />
-
-                        {/* User Location */}
-                        <Marker position={center} icon={icon}>
-                            <Popup>Your Location</Popup>
-                        </Marker>
-
-                        {/* Stations */}
-                        {chargingStations.map(st => (
-                            <Marker
-                                key={st.id}
-                                position={[st.lat, st.lng]}
-                                icon={stationIcon}
-                                eventHandlers={{
-                                    click: () => setSelectedStation(st.id)
-                                }}
-                            >
-                                <Popup className="glass-popup">
-                                    <div className="p-1">
-                                        <strong className="text-sm">{st.name}</strong>
-                                        <br />
-                                        <span className="text-xs text-muted-foreground">{st.power} • {st.available} Open</span>
-                                    </div>
-                                </Popup>
-                            </Marker>
-                        ))}
-                    </MapContainer>
+                        range={range}
+                        chargingStations={chargingStations}
+                        selectedStation={selectedStation}
+                        onStationSelect={setSelectedStation}
+                    />
 
                     {/* Overlay Stats */}
                     <div className="absolute top-4 right-4 glass-card-static px-3 py-1.5 rounded-lg z-[1000] text-xs font-mono">

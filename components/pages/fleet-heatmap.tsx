@@ -4,9 +4,14 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { Card } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet"
 import { AlertTriangle, CheckCircle, ShieldAlert } from "lucide-react"
-import "leaflet/dist/leaflet.css"
+import dynamic from "next/dynamic"
+
+// Dynamic import of the map component
+const FleetMap = dynamic(() => import("@/components/maps/FleetMap"), {
+    ssr: false,
+    loading: () => <div className="h-full w-full flex items-center justify-center bg-[#0B0E12] text-muted-foreground">Loading Heatmap...</div>
+})
 
 const fleetData = [
     { id: 1, lat: 28.6139, lng: 77.2090, status: "critical", region: "North", issue: "Battery Overheat" },
@@ -82,39 +87,7 @@ export function FleetHeatmap() {
 
                 {/* Global Map */}
                 <Card className="lg:col-span-3 rounded-2xl overflow-hidden border border-primary/20 relative">
-                    <MapContainer
-                        center={[20.5937, 78.9629]} // India Center
-                        zoom={5}
-                        style={{ height: "100%", width: "100%", background: "#0B0E12" }}
-                        zoomControl={false}
-                    >
-                        <TileLayer
-                            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                            attribution='&copy; CARTO'
-                        />
-
-                        {filteredFleet.map(v => (
-                            <CircleMarker
-                                key={v.id}
-                                center={[v.lat, v.lng]}
-                                radius={8}
-                                pathOptions={{
-                                    color: v.status === 'healthy' ? '#4ade80' : v.status === 'warning' ? '#facc15' : '#ef4444',
-                                    fillColor: v.status === 'healthy' ? '#4ade80' : v.status === 'warning' ? '#facc15' : '#ef4444',
-                                    fillOpacity: 0.6
-                                }}
-                            >
-                                <Popup>
-                                    <div className="text-sm">
-                                        <strong>Vehicle #{v.id}</strong>
-                                        <br />
-                                        Status: {v.status.toUpperCase()}
-                                        {v.issue && <><br /><span className="text-red-500">{v.issue}</span></>}
-                                    </div>
-                                </Popup>
-                            </CircleMarker>
-                        ))}
-                    </MapContainer>
+                    <FleetMap data={filteredFleet} />
                 </Card>
             </div>
         </div>
