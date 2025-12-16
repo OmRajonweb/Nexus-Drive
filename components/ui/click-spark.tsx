@@ -90,12 +90,13 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     if (!ctx) return;
 
     let animationId: number;
+    let isAnimating = false;
 
     const draw = (timestamp: number) => {
       if (!startTimeRef.current) {
         startTimeRef.current = timestamp;
       }
-      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       sparksRef.current = sparksRef.current.filter((spark: Spark) => {
         const elapsed = timestamp - spark.startTime;
@@ -124,10 +125,35 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
         return true;
       });
 
-      animationId = requestAnimationFrame(draw);
+      if (sparksRef.current.length > 0) {
+        animationId = requestAnimationFrame(draw);
+      } else {
+        isAnimating = false;
+      }
     };
 
-    animationId = requestAnimationFrame(draw);
+    // Expose a way to start animation from outside if needed, 
+    // but here we just rely on the click handler to push sparks and start the loop.
+    // However, since we can't easily modify the click handler from this effect,
+    // we'll set up an interval or just check in the click handler?
+    // Actually, simpler approach: Use a ref dependency or just rely on the fact 
+    // that this effect sets up the loop. 
+    // To properly restart the loop, we need to detect when sparks are added.
+    // See modification below in handleClick. 
+
+    // For now, let's just define the draw function here. The loop trigger needs to happen where sparks are added.
+
+    // Wait, let's restructure. 
+    // We can use a mutable ref for the draw function to call it from event handler?
+    // Or simpler: put the loop logic in a ref and call it.
+
+    // Let's attach the start function to the canvas or a ref that we can access.
+    (canvas as any).__startAnimation = () => {
+      if (!isAnimating) {
+        isAnimating = true;
+        animationId = requestAnimationFrame(draw);
+      }
+    };
 
     return () => {
       cancelAnimationFrame(animationId);
@@ -150,6 +176,11 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     }));
 
     sparksRef.current.push(...newSparks);
+
+    // Trigger animation if not running
+    if ((canvas as any).__startAnimation) {
+      (canvas as any).__startAnimation();
+    }
   };
 
   return (

@@ -3,13 +3,13 @@
 import { motion } from "framer-motion"
 import { Card } from "@/components/ui/card"
 import { useState } from "react"
-import { 
-  Bot, 
-  LineChart, 
-  Sparkles, 
-  MessageSquare, 
-  Calendar, 
-  Truck, 
+import {
+  Bot,
+  LineChart,
+  Sparkles,
+  MessageSquare,
+  Calendar,
+  Truck,
   Star,
   Zap
 } from "lucide-react"
@@ -30,9 +30,9 @@ export function AgentOrchestration() {
     <Card className="glass-card glass-card-hover p-8 rounded-2xl relative overflow-hidden">
       {/* Background glow effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-50" />
-      
+
       <div className="relative z-10">
-        <motion.h3 
+        <motion.h3
           className="text-xl font-bold mb-8 text-gradient font-[family-name:var(--font-orbitron)]"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -63,9 +63,9 @@ export function AgentOrchestration() {
                   strokeWidth="2"
                   strokeDasharray="5,5"
                   initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ 
-                    pathLength: 1, 
-                    opacity: agents[idx].status === "active" ? 0.6 : 0.2 
+                  animate={{
+                    pathLength: 1,
+                    opacity: agents[idx].status === "active" ? 0.6 : 0.2
                   }}
                   transition={{ duration: 1, delay: idx * 0.1 }}
                 />
@@ -86,55 +86,24 @@ export function AgentOrchestration() {
             transition={{ duration: 0.8, type: "spring" }}
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
           >
-            <motion.div
-              animate={{ 
-                scale: [1, 1.05, 1],
-                rotate: [0, 5, -5, 0]
-              }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="relative"
-            >
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary via-accent to-primary flex items-center justify-center neon-glow-lg relative overflow-hidden group cursor-pointer">
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-br from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity"
-                  animate={{
-                    rotate: [0, 360],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                />
+            <div className="relative">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary via-accent to-primary flex items-center justify-center neon-glow-lg relative overflow-hidden group cursor-pointer border-2 border-primary/50">
                 <Bot className="w-10 h-10 text-background relative z-10" />
               </div>
-              {/* Pulse rings */}
+              {/* Single subtle pulse ring */}
               <motion.div
-                className="absolute inset-0 rounded-2xl border-2 border-primary"
+                className="absolute inset-0 rounded-2xl border border-primary/30"
                 animate={{
-                  scale: [1, 1.5, 1],
-                  opacity: [0.8, 0, 0.8],
+                  scale: [1, 1.2, 1],
+                  opacity: [0.5, 0, 0.5],
                 }}
                 transition={{
-                  duration: 2,
+                  duration: 3,
                   repeat: Infinity,
-                  ease: "easeOut",
+                  ease: "easeInOut",
                 }}
               />
-              <motion.div
-                className="absolute inset-0 rounded-2xl border-2 border-accent"
-                animate={{
-                  scale: [1, 1.8, 1],
-                  opacity: [0.6, 0, 0.6],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeOut",
-                  delay: 0.5,
-                }}
-              />
-            </motion.div>
+            </div>
             <p className="text-center text-sm font-bold mt-3 text-primary font-[family-name:var(--font-orbitron)]">
               MASTER
             </p>
@@ -172,9 +141,8 @@ export function AgentOrchestration() {
                     className={`relative cursor-pointer`}
                   >
                     <div
-                      className={`w-16 h-16 rounded-xl bg-gradient-to-br ${agent.color} flex items-center justify-center relative overflow-hidden ${
-                        agent.status === "active" ? "neon-glow" : "opacity-60"
-                      }`}
+                      className={`w-16 h-16 rounded-xl bg-gradient-to-br ${agent.color} flex items-center justify-center relative overflow-hidden ${agent.status === "active" ? "neon-glow" : "opacity-60"
+                        }`}
                     >
                       {agent.status === "active" && (
                         <motion.div
@@ -191,29 +159,11 @@ export function AgentOrchestration() {
                       )}
                       <Icon className="w-7 h-7 text-white relative z-10" />
                     </div>
-                    
+
                     {/* Status indicator */}
-                    <motion.div
-                      className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-background z-20 ${
-                        agent.status === "active" ? "bg-green-400" : "bg-gray-500"
-                      }`}
-                      animate={
-                        agent.status === "active"
-                          ? {
-                              scale: [1, 1.2, 1],
-                              boxShadow: [
-                                "0 0 0 0 rgba(34, 197, 94, 0.7)",
-                                "0 0 0 8px rgba(34, 197, 94, 0)",
-                                "0 0 0 0 rgba(34, 197, 94, 0)",
-                              ],
-                            }
-                          : {}
-                      }
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeOut",
-                      }}
+                    <div
+                      className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-background z-20 ${agent.status === "active" ? "bg-green-400" : "bg-gray-500"
+                        } ${agent.status === "active" ? "shadow-[0_0_10px_rgba(34,197,94,0.6)]" : ""}`}
                     />
 
                     {/* Hover tooltip */}
@@ -248,7 +198,7 @@ export function AgentOrchestration() {
         </div>
 
         {/* Stats */}
-        <motion.div 
+        <motion.div
           className="mt-6 grid grid-cols-3 gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

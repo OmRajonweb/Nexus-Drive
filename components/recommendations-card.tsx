@@ -61,7 +61,7 @@ export function RecommendationsCard({ onSchedule, recentBooking }: Props) {
     <Card className="glass-card glass-card-hover p-6 rounded-2xl relative overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-primary/5 opacity-50" />
-      
+
       <div className="relative z-10">
         <div className="flex items-center gap-3 mb-4">
           <motion.div
@@ -96,7 +96,7 @@ export function RecommendationsCard({ onSchedule, recentBooking }: Props) {
           {recommendations.map((rec, idx) => {
             const Icon = rec.icon
             const isHigh = rec.priority === "high"
-            
+
             return (
               <motion.div
                 key={idx}
@@ -105,48 +105,24 @@ export function RecommendationsCard({ onSchedule, recentBooking }: Props) {
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.15, duration: 0.4 }}
                 whileHover={{ x: 4, scale: 1.01 }}
-                className={`glass-card p-4 rounded-xl relative overflow-hidden group cursor-pointer ${
-                  isHigh ? "neon-border-bright" : "neon-border"
-                }`}
+                className={`glass-card-static p-4 rounded-xl relative overflow-hidden group cursor-pointer ${isHigh ? "neon-border-bright" : "neon-border"
+                  }`}
               >
-                {/* Animated background gradient */}
-                <motion.div
-                  className={`absolute inset-0 ${
-                    isHigh 
-                      ? "bg-gradient-to-r from-red-500/10 to-transparent" 
-                      : "bg-gradient-to-r from-yellow-500/10 to-transparent"
-                  } opacity-0 group-hover:opacity-100 transition-opacity`}
-                />
 
-                {/* Warning pulse for high priority */}
-                {isHigh && (
-                  <motion.div
-                    className="absolute inset-0 bg-red-500/5"
-                    animate={{
-                      opacity: [0.1, 0.3, 0.1],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  />
-                )}
+
 
                 <div className="relative z-10">
                   <div className="flex items-start gap-3">
                     <motion.div
-                      className={`p-2.5 rounded-xl ${
-                        isHigh 
-                          ? "bg-red-500/20" 
-                          : "bg-yellow-500/20"
-                      }`}
+                      className={`p-2.5 rounded-xl ${isHigh
+                        ? "bg-red-500/20"
+                        : "bg-yellow-500/20"
+                        }`}
                       whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                       transition={{ duration: 0.5 }}
                     >
-                      <Icon className={`w-5 h-5 ${
-                        isHigh ? "text-red-400" : "text-yellow-400"
-                      }`} />
+                      <Icon className={`w-5 h-5 ${isHigh ? "text-red-400" : "text-yellow-400"
+                        }`} />
                     </motion.div>
 
                     <div className="flex-1">
@@ -161,11 +137,10 @@ export function RecommendationsCard({ onSchedule, recentBooking }: Props) {
                             repeat: Infinity,
                             ease: "easeInOut",
                           }}
-                          className={`text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wide ${
-                            isHigh 
-                              ? "bg-red-500/20 text-red-400 border border-red-500/30" 
-                              : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
-                          }`}
+                          className={`text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wide ${isHigh
+                            ? "bg-red-500/20 text-red-400 border border-red-500/30"
+                            : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
+                            }`}
                         >
                           {rec.priority}
                         </motion.span>
@@ -178,9 +153,8 @@ export function RecommendationsCard({ onSchedule, recentBooking }: Props) {
                       <div className="flex items-center gap-4 mb-3">
                         <div className="text-xs">
                           <span className="text-muted-foreground">Impact: </span>
-                          <span className={`font-semibold ${
-                            isHigh ? "text-red-400" : "text-yellow-400"
-                          }`}>{rec.impact}</span>
+                          <span className={`font-semibold ${isHigh ? "text-red-400" : "text-yellow-400"
+                            }`}>{rec.impact}</span>
                         </div>
                         <div className="text-xs">
                           <span className="text-muted-foreground">Est. Time: </span>
@@ -224,7 +198,7 @@ export function RecommendationsCard({ onSchedule, recentBooking }: Props) {
         </div>
 
         {/* Summary footer */}
-        <motion.div 
+        <motion.div
           className="mt-4 glass-card rounded-xl p-3 flex items-center justify-between"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

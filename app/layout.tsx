@@ -7,13 +7,13 @@ import { Toaster } from "@/components/ui/sonner"
 import { RoleProvider } from "@/components/role-provider"
 import ClickSpark from "@/components/ui/click-spark"
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
 })
 
-const orbitron = Orbitron({ 
+const orbitron = Orbitron({
   subsets: ["latin"],
   variable: "--font-orbitron",
   display: "swap",
@@ -40,8 +40,8 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          {/* Particle background effect */}
-          <div className="particles fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          {/* Particle background effect - Removed for performance */}
+          {/* <div className="particles fixed inset-0 pointer-events-none z-0 overflow-hidden">
             <div className="particle w-2 h-2" style={{ left: '10%', top: '20%', animationDelay: '0s' }} />
             <div className="particle w-3 h-3" style={{ left: '80%', top: '30%', animationDelay: '2s' }} />
             <div className="particle w-1 h-1" style={{ left: '30%', top: '60%', animationDelay: '4s' }} />
@@ -49,8 +49,8 @@ export default function RootLayout({
             <div className="particle w-1 h-1" style={{ left: '50%', top: '40%', animationDelay: '8s' }} />
             <div className="particle w-2 h-2" style={{ left: '20%', top: '80%', animationDelay: '10s' }} />
             <div className="particle w-3 h-3" style={{ left: '90%', top: '50%', animationDelay: '12s' }} />
-          </div>
-          
+          </div> */}
+
           <RoleProvider>
             <ClickSpark
               sparkColor="#00E0FF"
@@ -66,7 +66,7 @@ export default function RootLayout({
               </div>
             </ClickSpark>
           </RoleProvider>
-          
+
           <Toaster position="top-right" richColors />
         </ThemeProvider>
       </body>

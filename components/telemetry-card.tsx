@@ -19,7 +19,7 @@ export function TelemetryCard() {
     <Card className="glass-card glass-card-hover p-6 rounded-2xl relative overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-50" />
-      
+
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -47,7 +47,7 @@ export function TelemetryCard() {
           {telemetryItems.map((item, idx) => {
             const Icon = item.icon
             const isWarning = item.status === "warning"
-            
+
             return (
               <motion.div
                 key={idx}
@@ -56,43 +56,31 @@ export function TelemetryCard() {
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1, duration: 0.3 }}
                 whileHover={{ scale: 1.05, y: -5 }}
-                className={`glass-card p-4 rounded-xl relative overflow-hidden group cursor-pointer ${
-                  isWarning ? "neon-border-bright" : "neon-border"
-                }`}
+                className={`glass-card p-4 rounded-xl relative overflow-hidden group cursor-pointer ${isWarning ? "neon-border-bright" : "neon-border"
+                  }`}
               >
-                {/* Animated background */}
-                <motion.div
-                  className={`absolute inset-0 ${
-                    isWarning 
-                      ? "bg-yellow-500/10" 
+                {/* Background hover effect */}
+                <div
+                  className={`absolute inset-0 ${isWarning
+                      ? "bg-yellow-500/10"
                       : "bg-primary/5"
-                  } opacity-0 group-hover:opacity-100 transition-opacity`}
-                  animate={isWarning ? {
-                    opacity: [0.1, 0.2, 0.1],
-                  } : {}}
-                  transition={isWarning ? {
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  } : {}}
+                    } opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
                 />
 
                 <div className="relative z-10">
                   <div className="flex items-start justify-between mb-3">
                     <motion.div
-                      className={`p-2 rounded-lg ${
-                        isWarning 
-                          ? "bg-yellow-500/20" 
+                      className={`p-2 rounded-lg ${isWarning
+                          ? "bg-yellow-500/20"
                           : "bg-primary/20"
-                      }`}
+                        }`}
                       whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                       transition={{ duration: 0.5 }}
                     >
-                      <Icon className={`w-5 h-5 ${
-                        isWarning ? "text-yellow-400" : "text-primary"
-                      }`} />
+                      <Icon className={`w-5 h-5 ${isWarning ? "text-yellow-400" : "text-primary"
+                        }`} />
                     </motion.div>
-                    
+
                     {isWarning && (
                       <motion.div
                         animate={{
@@ -111,24 +99,22 @@ export function TelemetryCard() {
                   <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider font-medium">
                     {item.label}
                   </p>
-                  <p className={`text-xl font-bold font-[family-name:var(--font-orbitron)] ${
-                    isWarning ? "text-yellow-400" : "text-foreground"
-                  }`}>
+                  <p className={`text-xl font-bold font-[family-name:var(--font-orbitron)] ${isWarning ? "text-yellow-400" : "text-foreground"
+                    }`}>
                     {item.value}
                   </p>
 
-                  <motion.div 
+                  <motion.div
                     className="mt-3"
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1, delay: idx * 0.1 + 0.3 }}
                   >
-                    <Progress 
-                      value={item.percent} 
-                      className={`h-1 ${
-                        isWarning ? "bg-yellow-900/30" : "bg-muted/30"
-                      }`}
+                    <Progress
+                      value={item.percent}
+                      className={`h-1 ${isWarning ? "bg-yellow-900/30" : "bg-muted/30"
+                        }`}
                     />
                   </motion.div>
                 </div>
@@ -138,7 +124,7 @@ export function TelemetryCard() {
         </div>
 
         {/* Status summary */}
-        <motion.div 
+        <motion.div
           className="mt-6 flex items-center justify-between glass-card rounded-xl p-3"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

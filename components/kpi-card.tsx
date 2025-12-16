@@ -15,28 +15,7 @@ interface KPICardProps {
   delay?: number
 }
 
-function AnimatedCounter({ value, duration = 2 }: { value: number; duration?: number }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const motionValue = useMotionValue(0)
-  const springValue = useSpring(motionValue, { duration: duration * 1000 })
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
 
-  useEffect(() => {
-    if (isInView) {
-      motionValue.set(value)
-    }
-  }, [motionValue, isInView, value])
-
-  useEffect(() => {
-    springValue.on("change", (latest) => {
-      if (ref.current) {
-        ref.current.textContent = Intl.NumberFormat("en-US").format(Math.round(latest))
-      }
-    })
-  }, [springValue])
-
-  return <span ref={ref} />
-}
 
 export function KPICard({ title, value, change, icon, trend = 75, delay = 0 }: KPICardProps) {
   const isPositive = change.startsWith("+")
@@ -50,19 +29,14 @@ export function KPICard({ title, value, change, icon, trend = 75, delay = 0 }: K
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay }}
-      whileHover={{ 
-        scale: 1.02, 
+      whileHover={{
+        scale: 1.02,
         y: -5,
         transition: { duration: 0.2 }
       }}
     >
       <Card className="glass-card glass-card-hover p-6 rounded-2xl relative overflow-hidden group">
-        {/* Animated gradient background on hover */}
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          initial={false}
-        />
-        
+
         {/* Content */}
         <div className="relative z-10">
           <div className="flex items-start justify-between mb-4">
@@ -70,27 +44,16 @@ export function KPICard({ title, value, change, icon, trend = 75, delay = 0 }: K
               <p className="text-muted-foreground text-sm mb-2 font-medium uppercase tracking-wider">
                 {title}
               </p>
-              <motion.p 
+              <p
                 className="text-3xl font-bold text-foreground font-[family-name:var(--font-orbitron)]"
-                initial={{ scale: 0.5, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: delay + 0.2 }}
               >
-                {hasNumericValue ? (
-                  <>
-                    <AnimatedCounter value={numericValue} />
-                    {value.replace(/[0-9.-]/g, '')}
-                  </>
-                ) : (
-                  value
-                )}
-              </motion.p>
+                {value}
+              </p>
             </div>
-            
+
             <motion.div
               className="p-3 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 neon-glow"
-              whileHover={{ 
+              whileHover={{
                 rotate: [0, -10, 10, -10, 0],
                 scale: 1.1
               }}
@@ -99,7 +62,7 @@ export function KPICard({ title, value, change, icon, trend = 75, delay = 0 }: K
               <Icon className="w-6 h-6 text-primary" />
             </motion.div>
           </div>
-          
+
           {/* Progress bar */}
           <motion.div
             initial={{ scaleX: 0 }}
@@ -108,17 +71,16 @@ export function KPICard({ title, value, change, icon, trend = 75, delay = 0 }: K
             transition={{ duration: 1, delay: delay + 0.3 }}
             className="mb-3 origin-left"
           >
-            <Progress 
-              value={trend} 
+            <Progress
+              value={trend}
               className="h-1.5 bg-muted/30"
             />
           </motion.div>
-          
+
           {/* Change indicator */}
-          <motion.div 
-            className={`text-sm font-semibold flex items-center gap-2 ${
-              isPositive ? "text-green-400" : "text-red-400"
-            }`}
+          <motion.div
+            className={`text-sm font-semibold flex items-center gap-2 ${isPositive ? "text-green-400" : "text-red-400"
+              }`}
             initial={{ opacity: 0, x: -10 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}

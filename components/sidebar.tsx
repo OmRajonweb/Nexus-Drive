@@ -2,17 +2,19 @@
 
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { 
-  LayoutDashboard, 
-  LineChart, 
-  Sparkles, 
-  MessageSquare, 
-  Truck, 
-  Star, 
-  Factory, 
-  Shield, 
+import {
+  LayoutDashboard,
+  LineChart,
+  Sparkles,
+  MessageSquare,
+  Truck,
+  Star,
+  Factory,
+  Shield,
   Car,
-  Zap
+  Zap,
+  Navigation,
+  Wrench
 } from "lucide-react"
 import { useRole } from "@/components/role-provider"
 
@@ -30,19 +32,21 @@ export function Sidebar({
     // Admin: Admin panel, Manufacturing, Security, Fleet
     menuItems = [
       { id: "admin", label: "Admin Panel", icon: LayoutDashboard },
+      { id: "fleet-heatmap", label: "Global Fleet Heatmap", icon: Car }, // New Feature
       { id: "manufacturing", label: "Manufacturing & Quality", icon: Factory },
       { id: "security", label: "Security / UEBA", icon: Shield },
-      { id: "fleet", label: "Fleet Management", icon: Car },
     ]
   } else if (role === "center") {
-    // Service Center: Dedicated portal (Phase 4)
+    // Service Center: Dedicated portal
     menuItems = [
       { id: "center", label: "Service Center Dashboard", icon: LayoutDashboard },
+      { id: "job-cards", label: "AI Job Cards", icon: Wrench }, // New Feature
     ]
   } else {
     // User: Overview and Phases 1-4
     menuItems = [
       { id: "overview", label: "Overview Dashboard", icon: LayoutDashboard },
+      { id: "trip-planner", label: "Smart Trip Planner", icon: Navigation }, // New Feature
       { id: "data-analysis", label: "Phase 1: Vehicle Overview & Profile", icon: LineChart },
       { id: "prediction", label: "Phase 2: AI Recommendations & Diagnostics", icon: Sparkles },
       { id: "engagement", label: "Phase 3: Engagement & Scheduling", icon: MessageSquare },
@@ -50,14 +54,14 @@ export function Sidebar({
     ]
   }
   return (
-    <motion.aside 
+    <motion.aside
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="w-64 glass-card border-r neon-border flex flex-col m-4 rounded-2xl overflow-hidden"
     >
       <div className="p-6 border-b neon-border">
-        <motion.div 
+        <motion.div
           className="flex items-center gap-3"
           whileHover={{ scale: 1.02 }}
         >
@@ -76,9 +80,9 @@ export function Sidebar({
         {menuItems.map((item, index) => {
           const Icon = item.icon
           const isActive = currentPage === item.id
-          
+
           return (
-            <motion.div 
+            <motion.div
               key={item.id}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -90,15 +94,14 @@ export function Sidebar({
               >
                 <Button
                   variant="ghost"
-                  className={`w-full justify-start gap-3 h-auto py-3 px-4 rounded-xl transition-all duration-300 ${
-                    isActive
-                      ? "active-state text-primary font-semibold"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-primary/80"
-                  }`}
+                  className={`w-full justify-start gap-3 h-auto py-3 px-4 rounded-xl transition-all duration-300 ${isActive
+                    ? "active-state text-primary font-semibold"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-primary/80"
+                    }`}
                   onClick={() => setCurrentPage(item.id)}
                 >
                   <motion.div
-                    animate={isActive ? { 
+                    animate={isActive ? {
                       rotate: [0, 5, -5, 0],
                       scale: [1, 1.1, 1]
                     } : {}}
@@ -123,24 +126,12 @@ export function Sidebar({
       </nav>
 
       <div className="p-4 border-t neon-border">
-        <motion.div 
-          className="glass-card rounded-xl p-3 text-center"
-          animate={{
-            boxShadow: [
-              "0 0 10px rgba(0, 224, 255, 0.1)",
-              "0 0 20px rgba(0, 224, 255, 0.2)",
-              "0 0 10px rgba(0, 224, 255, 0.1)",
-            ],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+        <motion.div
+          className="glass-card rounded-xl p-3 text-center border border-primary/10"
         >
           <p className="text-xs text-primary/80 font-semibold">v1.0 • AI Ecosystem</p>
           <div className="flex items-center justify-center gap-2 mt-2">
-            <motion.div 
+            <motion.div
               className="w-1.5 h-1.5 rounded-full bg-primary"
               animate={{
                 scale: [1, 1.5, 1],

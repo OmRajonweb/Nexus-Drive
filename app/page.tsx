@@ -4,19 +4,24 @@ import React, { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Sidebar } from "@/components/sidebar"
 import { Header } from "@/components/header"
-import { OverviewDashboard } from "@/components/pages/overview-dashboard"
-import { DataAnalysisPage } from "@/components/pages/data-analysis"
-import { PredictionPage } from "@/components/pages/prediction"
-import { EngagementPage } from "@/components/pages/engagement"
-import { ServiceLogisticsPage } from "@/components/pages/service-logistics"
-import { FeedbackPage } from "@/components/pages/feedback"
-import { ManufacturingPage } from "@/components/pages/manufacturing"
-import { SecurityPage } from "@/components/pages/security"
-import { FleetPage } from "@/components/pages/fleet"
-import { AdminPage } from "../components/pages/admin"
-import { ServiceCenterPage } from "@/components/pages/service-center"
-import { LoginPage } from "@/components/pages/login"
 import { useRole } from "@/components/role-provider"
+import dynamic from 'next/dynamic'
+
+const OverviewDashboard = dynamic(() => import("@/components/pages/overview-dashboard").then(mod => mod.OverviewDashboard))
+const DataAnalysisPage = dynamic(() => import("@/components/pages/data-analysis").then(mod => mod.DataAnalysisPage))
+const PredictionPage = dynamic(() => import("@/components/pages/prediction").then(mod => mod.PredictionPage))
+const EngagementPage = dynamic(() => import("@/components/pages/engagement").then(mod => mod.EngagementPage))
+const ServiceLogisticsPage = dynamic(() => import("@/components/pages/service-logistics").then(mod => mod.ServiceLogisticsPage))
+const FeedbackPage = dynamic(() => import("@/components/pages/feedback").then(mod => mod.FeedbackPage))
+const ManufacturingPage = dynamic(() => import("@/components/pages/manufacturing").then(mod => mod.ManufacturingPage))
+const SecurityPage = dynamic(() => import("@/components/pages/security").then(mod => mod.SecurityPage))
+const FleetPage = dynamic(() => import("@/components/pages/fleet").then(mod => mod.FleetPage))
+const AdminPage = dynamic(() => import("../components/pages/admin").then(mod => mod.AdminPage))
+const ServiceCenterPage = dynamic(() => import("@/components/pages/service-center").then(mod => mod.ServiceCenterPage))
+const LoginPage = dynamic(() => import("@/components/pages/login").then(mod => mod.LoginPage))
+const TripPlanner = dynamic(() => import("@/components/pages/trip-planner").then(mod => mod.TripPlanner)) // New
+const FleetHeatmap = dynamic(() => import("@/components/pages/fleet-heatmap").then(mod => mod.FleetHeatmap)) // New
+const JobCards = dynamic(() => import("@/components/pages/job-cards").then(mod => mod.JobCards)) // New
 
 const pageVariants = {
   initial: {
@@ -73,6 +78,12 @@ export default function Home() {
         return <SecurityPage />
       case "fleet":
         return <FleetPage />
+      case "trip-planner": // New
+        return <TripPlanner />
+      case "fleet-heatmap": // New
+        return <FleetHeatmap />
+      case "job-cards": // New
+        return <JobCards />
       default:
         return <OverviewDashboard />
     }
@@ -85,10 +96,10 @@ export default function Home() {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} isOpen={true} />
-      
+
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header onToggleSidebar={() => {}} sidebarOpen={true} />
-        
+        <Header onToggleSidebar={() => { }} sidebarOpen={true} />
+
         <main className="flex-1 overflow-auto p-6 pb-8">
           <AnimatePresence mode="wait">
             <motion.div
