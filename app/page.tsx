@@ -19,8 +19,8 @@ const FleetPage = dynamic(() => import("@/components/pages/fleet").then(mod => m
 const AdminPage = dynamic(() => import("../components/pages/admin").then(mod => mod.AdminPage))
 const ServiceCenterPage = dynamic(() => import("@/components/pages/service-center").then(mod => mod.ServiceCenterPage))
 const LoginPage = dynamic(() => import("@/components/pages/login").then(mod => mod.LoginPage))
-const TripPlanner = dynamic(() => import("@/components/pages/trip-planner").then(mod => mod.TripPlanner)) // New
-const FleetHeatmap = dynamic(() => import("@/components/pages/fleet-heatmap").then(mod => mod.FleetHeatmap)) // New
+const TripPlanner = dynamic(() => import("@/components/pages/trip-planner").then(mod => mod.TripPlanner), { ssr: false }) // New
+const FleetHeatmap = dynamic(() => import("@/components/pages/fleet-heatmap").then(mod => mod.FleetHeatmap), { ssr: false }) // New
 const JobCards = dynamic(() => import("@/components/pages/job-cards").then(mod => mod.JobCards)) // New
 
 const pageVariants = {
