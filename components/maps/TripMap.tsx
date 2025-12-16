@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { MapContainer, TileLayer, Circle, Marker, Popup, useMap } from "react-leaflet"
-import "leaflet/dist/leaflet.css"
 
 // Props definition
 interface TripMapProps {

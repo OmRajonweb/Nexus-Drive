@@ -1,7 +1,6 @@
 "use client"
 
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet"
-import "leaflet/dist/leaflet.css"
 
 // Props definition
 interface FleetMapProps {
